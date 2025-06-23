@@ -28,4 +28,4 @@ jobs:
 
     - name: 🔑 Run TruffleHog (Secret Scan)
       run: |
-        trufflehog filesystem --json --repo_path .
+        trufflehog filesystem  --json --verbose --repo_path . 
