@@ -21,9 +21,9 @@ jobs:
       
       - name: Upload Semgrep Report
         uses: actions/upload-artifact@v4
-         with:
-            name: semgrep-report
-            path: semgrep.sarif
+        with:
+          name: semgrep-report
+          path: semgrep.sarif
 
   trufflehog_scan:
     runs-on: ubuntu-latest
