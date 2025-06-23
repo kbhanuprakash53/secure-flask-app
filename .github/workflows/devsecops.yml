@@ -31,8 +31,4 @@ jobs:
         trufflehog filesystem  --json --repo_path . > trufflehog_results.json
 
 
-    - name: Upload TruffleHog results
-      uses: actions/upload-artifact@v3
-      with:
-            name: trufflehog-results
-            path: trufflehog_results.json
+    
