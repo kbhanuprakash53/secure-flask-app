@@ -1,0 +1,31 @@
+name: DevSecOps Security Scan
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v3
+
+    - name: 🛡️ Install Semgrep
+      run: |
+        pip install semgrep
+
+    - name: 🔍 Run Semgrep Scan
+      run: |
+        semgrep --config=p/ci --error
+
+    - name: 🔐 Install TruffleHog
+      run: |
+        pip install trufflehog
+
+    - name: 🔑 Run TruffleHog (Secret Scan)
+      run: |
+        trufflehog filesystem --directory . --no-update --only-verified
