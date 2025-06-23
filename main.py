@@ -79,7 +79,17 @@ def logout():
     flash('You have been logged out.')
     return redirect(url_for('home'))
 
-if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-    app.run(debug=os.getenv("FLASK_DEBUG") == "1", host="0.0.0.0", port=5000)
+if __name__ == "__main__":
+    debug_mode = os.getenv("FLASK_DEBUG") == "1"
+
+    # Safer: expose publicly only if NOT in debug mode
+    if debug_mode:
+        host = "127.0.0.1"
+    else:
+        host = os.getenv("FLASK_RUN_HOST", "0.0.0.0")
+
+    app.run(
+        debug=debug_mode,
+        host=host,
+        port=int(os.getenv("FLASK_RUN_PORT", 5000))
+    )
