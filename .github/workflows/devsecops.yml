@@ -7,33 +7,44 @@ on:
     branches: [main]
 
 jobs:
-  # semgrep_scan:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: 📥 Checkout code
-  #       uses: actions/checkout@v3
+  semgrep_scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v3
 
-  #     - name: 🛡️ Install Semgrep
-  #       run: pip install semgrep
+      - name: 🛡️ Install Semgrep
+        run: pip install semgrep
 
-  #     - name: 🔍 Run Semgrep Scan
-  #       run: semgrep --config=p/ci --error
+      - name: 🔍 Run Semgrep Scan
+        run: semgrep --config=p/ci --error --sarif > semgrep.sarif
+      
+      - name: Upload Semgrep Report
+        uses: actions/upload-artifact@v4
+         with:
+            name: semgrep-report
+            path: semgrep.sarif
 
-  # trufflehog_scan:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: 📥 Checkout code
-  #       uses: actions/checkout@v3
+  trufflehog_scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v3
 
-  #     - name: 🔐 Install TruffleHog
-  #       run: pip install trufflehog
+      - name: 🔐 Install TruffleHog
+        run: pip install trufflehog
 
-  #     - name: 🔑 Run TruffleHog (Secret Scan)
-  #       run: trufflehog filesystem --json --repo_path .
+      - name: 🔑 Run TruffleHog (Secret Scan)
+        run: trufflehog filesystem --json --repo_path . > trufflehog-results.json
+      - name: Upload TruffleHog Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: trufflehog-report
+          path: trufflehog-results.json
 
   zap_scan:
     runs-on: ubuntu-latest
-    #needs: [semgrep_scan, trufflehog_scan]
+    needs: [semgrep_scan, trufflehog_scan]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -53,5 +64,5 @@ jobs:
       - name: Upload ZAP Report
         uses: actions/upload-artifact@v4
         with:
-            name: zap-all-reports
-            path: zap-wrk/report_html.html
+            name: zap-report
+            path: zap_scan.zip
