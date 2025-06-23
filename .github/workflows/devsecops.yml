@@ -68,10 +68,4 @@ jobs:
             path: zap_scan.zip
       
 
-       - name: 📣 Send Discord Notification
-         run: |
-          status="✅ All scans completed successfully!"
-          curl -H "Content-Type: application/json" \
-            -X POST \
-            -d "{\"content\": \"$status\"}" \
-            ${{ secrets.DISCORD_WEBHOOK }}
+      
